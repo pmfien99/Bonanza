@@ -81,7 +81,7 @@ contract BzaStaking is Ownable {
     event Transfer(address indexed from, address indexed to, uint amount);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     event Unstake(address staker, uint amount);
-    event Stake(address staker, uint amount);
+    event NewStake(address staker, uint amount);
     event BZAHarvest(address harvester, uint amount);
     event RewardRecieved(uint amount, uint afterBonus, uint dailyAmt, uint timeCreated);
     event RewardsPaid(string String);
@@ -408,7 +408,7 @@ contract BzaStaking is Ownable {
         } 
 
             emit Transfer(msg.sender, address(this), _amount);
-            emit Stake(msg.sender, _amount);
+            emit NewStake(msg.sender, _amount);
             updateStakeShares();
 
     }
