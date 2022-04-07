@@ -69,7 +69,7 @@ contract BzaStaking is Ownable {
     constructor()  {
         farmingWalletAddress = 0x4Ba5E012E0aa54B713e331E63Ac6B80B249A33C8;
         stakeTokenAddress = 0x493bb222bb441a286437258c299210f442D7e2CD; //TESTNET ADDRESS
-        BUSDTokenAddress = 0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47; //TESTNET ADADRESS
+        BUSDTokenAddress = 0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee; //TESTNET ADADRESS
         totalStakeBalance = 0;
         stakeLockupPeriod = 2 days; 
         rewardDistDays = 7;
@@ -81,6 +81,8 @@ contract BzaStaking is Ownable {
     event Transfer(address indexed from, address indexed to, uint amount);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     event Unstake(address staker, uint amount);
+    event Stake(address staker, uint amount);
+    event BZAHarvest(address harvester, uint amount);
     event RewardRecieved(uint amount, uint afterBonus, uint dailyAmt, uint timeCreated);
     event RewardsPaid(string String);
     event WhitelistAdd(address indexed added, bool success);
@@ -406,6 +408,7 @@ contract BzaStaking is Ownable {
         } 
 
             emit Transfer(msg.sender, address(this), _amount);
+            emit Stake(msg.sender, _amount);
             updateStakeShares();
 
     }
@@ -433,6 +436,8 @@ contract BzaStaking is Ownable {
             IERC20(BUSDTokenAddress).transfer(msg.sender, _harvestReq);
             tokenStakers[msg.sender].availHarvest = SafeMath.sub(tokenStakers[msg.sender].availHarvest, _harvestReq); 
             emit Transfer(BUSDTokenAddress, msg.sender, _harvestReq);
+            emit BZAHarvest(msg.sender, _harvestReq);
+
         }
 
     
@@ -465,7 +470,7 @@ contract BzaStaking is Ownable {
 
         // remove from total balance as well!
 
-         emit Unstake(msg.sender, _amount);  
+        emit Unstake(msg.sender, _amount);  
          
         if(tokenStakers[msg.sender].bzaStakedBalance <= 0) {
             tokenStakers[msg.sender].exists = false; 
