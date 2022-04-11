@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: UNLICENSED */
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -549,7 +550,7 @@ contract BzaStaking is Ownable {
     *
     */
     function distributeRewards() onlyOwner public {
-        require(block.timestamp - lastDistribution > 1 days, "Only callable once per day!");
+        // require(block.timestamp - lastDistribution > 1 days, "Only callable once per day!");
 
         // control for making sure there is enough BUSD?
 
