@@ -535,9 +535,14 @@ contract BzaStaking is Ownable {
 
         for(uint i = 0; i < rewardSchedules.length; i++) {
             if (rewardSchedules[i].daysRemain <= 0) {
+                if (rewardSchedules.length == 1) {
+                    rewardSchedules.pop();
+                } else {
                 rewardSchedules[i] = rewardSchedules[rewardSchedules.length-1];
                 delete rewardSchedules[rewardSchedules.length-1];
                 rewardSchedules.pop();
+                }
+
             }
         }
 
@@ -551,9 +556,7 @@ contract BzaStaking is Ownable {
     */
     function distributeRewards() onlyOwner public {
         // require(block.timestamp - lastDistribution > 1 days, "Only callable once per day!");
-
-        // control for making sure there is enough BUSD?
-
+        if (rewardSchedules.length > 1) {
         // LOOP STAKED USERS
         for(uint i = 0; i < stakers.length; i++) {
             address stakerAddress = stakers[i];
@@ -595,6 +598,13 @@ contract BzaStaking is Ownable {
         removeCompletedRewards();
 
         emit RewardsPaid("Rewards Paid out Today!");
+        } else {
+        // REMOVE REWARDS THAT ARE DONE
+        removeCompletedRewards();
+        emit RewardsPaid("Not Enough Schedules to Distribute Rewards");
+
+        }
+
 
     }
 
